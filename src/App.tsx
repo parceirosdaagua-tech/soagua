@@ -1379,6 +1379,7 @@ function ProductModal({ product, onClose }: {
 function AppContent() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'order_flow' | 'clients' | 'products' | 'logistics' | 'vales_comissoes' | 'fleet' | 'supabase_setup'>('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [valesRightTab, setValesRightTab] = useState<'movimentacao' | 'novo_funcionario'>('movimentacao');
   const { 
     clients, 
     sectors, 
@@ -2919,104 +2920,209 @@ function AppContent() {
                   </div>
                 </div>
 
-                {/* ADD VALE / MOVEMENT FORM */}
-                <form 
-                  onSubmit={e => {
-                    e.preventDefault();
-                    const target = e.target as any;
-                    const employeeId = target.elements.employeeId.value;
-                    const type = target.elements.type.value as any;
-                    const amount = parseFloat(target.elements.amount.value);
-                    const description = target.elements.description.value;
-                    const customDate = target.elements.customDate.value;
-
-                    if (!employeeId || !type || isNaN(amount) || amount <= 0 || !description) {
-                      alert("Preencha todos os campos obrigatórios.");
-                      return;
-                    }
-
-                    addVoucher({
-                      employeeId,
-                      type,
-                      amount,
-                      date: customDate ? new Date(customDate + 'T12:00:00').toISOString() : new Date().toISOString(),
-                      description
-                    });
-
-                    target.reset();
-                    alert("Movimentação financeira registrada com total precisão!");
-                  }}
-                  className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm space-y-4 h-fit"
-                >
-                  <h3 className="font-bold text-slate-800 text-sm uppercase tracking-wider pb-2 border-b border-slate-100">Lançar Movimentação</h3>
-                  
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">1. Colaborador</label>
-                    <select 
-                      name="employeeId"
-                      required
-                      className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+                {/* RIGHT PANEL: TABBED MOVEMENT / ADD EMPLOYEE */}
+                <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden h-fit flex flex-col">
+                  {/* TABS */}
+                  <div className="flex border-b border-slate-100 bg-slate-50/30">
+                    <button 
+                      type="button"
+                      onClick={() => setValesRightTab('movimentacao')}
+                      className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-wider text-center transition-all ${valesRightTab === 'movimentacao' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-slate-400 hover:text-slate-600'}`}
                     >
-                      <option value="">Selecione...</option>
-                      {deliveryPersons.filter(dp => !dp.deletedAt).map(dp => (
-                        <option key={dp.id} value={dp.id}>{dp.name} (Entregador #{dp.number})</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">2. Tipo de Movimentação</label>
-                    <select 
-                      name="type"
-                      required
-                      className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+                      Lançar Movimentação
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setValesRightTab('novo_funcionario')}
+                      className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-wider text-center transition-all ${valesRightTab === 'novo_funcionario' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white' : 'text-slate-400 hover:text-slate-600'}`}
                     >
-                      <option value="voucher_withdraw">Vale / Adiantamento (-)</option>
-                      <option value="consumption_debit">Consumo Próprio de Água (-)</option>
-                      <option value="commission_earn">Comissão Extra / Bônus (+)</option>
-                      <option value="other_debit">Outros Débitos / Descontos (-)</option>
-                    </select>
+                      Novo Colaborador
+                    </button>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">3. Valor (R$)</label>
-                    <input 
-                      name="amount"
-                      type="number" 
-                      step="0.01"
-                      required
-                      placeholder="Ex: 50.00"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-bold text-slate-800"
-                    />
-                  </div>
+                  {/* TAB CONTENT: LAUNCH MOVEMENT */}
+                  {valesRightTab === 'movimentacao' && (
+                    <form 
+                      onSubmit={e => {
+                        e.preventDefault();
+                        const target = e.target as any;
+                        const employeeId = target.elements.employeeId.value;
+                        const type = target.elements.type.value as any;
+                        const amount = parseFloat(target.elements.amount.value);
+                        const description = target.elements.description.value;
+                        const customDate = target.elements.customDate.value;
 
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">4. Descrição do Lançamento</label>
-                    <input 
-                      name="description"
-                      type="text" 
-                      required
-                      placeholder="Ex: Pegou 2 Galões de 20L, Vale Quarta, etc."
-                      className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
-                    />
-                  </div>
+                        if (!employeeId || !type || isNaN(amount) || amount <= 0 || !description) {
+                          alert("Preencha todos os campos obrigatórios.");
+                          return;
+                        }
 
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase">5. Data Opcional (Padrão: Hoje)</label>
-                    <input 
-                      name="customDate"
-                      type="date"
-                      className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
-                    />
-                  </div>
+                        addVoucher({
+                          employeeId,
+                          type,
+                          amount,
+                          date: customDate ? new Date(customDate + 'T12:00:00').toISOString() : new Date().toISOString(),
+                          description
+                        });
 
-                  <button 
-                    type="submit"
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-xs uppercase transition-all shadow-sm"
-                  >
-                    Registrar Lançamento
-                  </button>
-                </form>
+                        target.reset();
+                        alert("Movimentação financeira registrada com total precisão!");
+                      }}
+                      className="p-5 space-y-4"
+                    >
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">1. Colaborador</label>
+                        <select 
+                          name="employeeId"
+                          required
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+                        >
+                          <option value="">Selecione...</option>
+                          {deliveryPersons.filter(dp => !dp.deletedAt).map(dp => (
+                            <option key={dp.id} value={dp.id}>{dp.name} (Entregador #{dp.number})</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">2. Tipo de Movimentação</label>
+                        <select 
+                          name="type"
+                          required
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+                        >
+                          <option value="voucher_withdraw">Vale / Adiantamento (-)</option>
+                          <option value="consumption_debit">Consumo Próprio de Água (-)</option>
+                          <option value="commission_earn">Comissão Extra / Bônus (+)</option>
+                          <option value="other_debit">Outros Débitos / Descontos (-)</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">3. Valor (R$)</label>
+                        <input 
+                          name="amount"
+                          type="number" 
+                          step="0.01"
+                          required
+                          placeholder="Ex: 50.00"
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-bold text-slate-800"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">4. Descrição do Lançamento</label>
+                        <input 
+                          name="description"
+                          type="text" 
+                          required
+                          placeholder="Ex: Pegou 2 Galões de 20L, Vale Quarta, etc."
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">5. Data Opcional (Padrão: Hoje)</label>
+                        <input 
+                          name="customDate"
+                          type="date"
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+                        />
+                      </div>
+
+                      <button 
+                        type="submit"
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-xs uppercase transition-all shadow-sm"
+                      >
+                        Registrar Lançamento
+                      </button>
+                    </form>
+                  )}
+
+                  {/* TAB CONTENT: ADD NEW EMPLOYEE */}
+                  {valesRightTab === 'novo_funcionario' && (
+                    <form 
+                      onSubmit={e => {
+                        e.preventDefault();
+                        const target = e.target as any;
+                        const name = target.elements.name.value;
+                        const phone = target.elements.phone.value;
+                        const weeklySalary = parseFloat(target.elements.weeklySalary.value);
+                        const number = parseInt(target.elements.number.value);
+
+                        if (!name || !phone || isNaN(weeklySalary) || isNaN(number)) {
+                          alert("Preencha todos os campos corretamente.");
+                          return;
+                        }
+
+                        addDeliveryPerson({
+                          name,
+                          phone,
+                          weeklySalary,
+                          number,
+                          status: 'active'
+                        });
+
+                        target.reset();
+                        alert(`Colaborador ${name} cadastrado com sucesso!`);
+                        setValesRightTab('movimentacao');
+                      }}
+                      className="p-5 space-y-4"
+                    >
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Nome Completo</label>
+                        <input 
+                          name="name"
+                          type="text" 
+                          required
+                          placeholder="Ex: Wagner Teixeira"
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-bold text-slate-800"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Telefone de Contato</label>
+                        <input 
+                          name="phone"
+                          type="text" 
+                          required
+                          placeholder="Ex: (22) 99999-9999"
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Salário Semanal Base (R$)</label>
+                        <input 
+                          name="weeklySalary"
+                          type="number" 
+                          step="0.01"
+                          required
+                          placeholder="Ex: 500.00"
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium text-slate-800"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Número do Entregador</label>
+                        <input 
+                          name="number"
+                          type="number" 
+                          required
+                          defaultValue={deliveryPersons.filter(dp => !dp.deletedAt).length + 1}
+                          className="w-full p-2.5 border border-slate-200 rounded-lg text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
+                        />
+                      </div>
+
+                      <button 
+                        type="submit"
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-xs uppercase transition-all shadow-sm"
+                      >
+                        Salvar Novo Colaborador
+                      </button>
+                    </form>
+                  )}
+                </div>
 
               </div>
             </motion.div>
