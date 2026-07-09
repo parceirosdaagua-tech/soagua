@@ -14,6 +14,7 @@ import {
   FileText, 
   Download, 
   X,
+  Menu,
   Search,
   Check,
   Smartphone,
@@ -1377,6 +1378,7 @@ function ProductModal({ product, onClose }: {
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'order_flow' | 'clients' | 'products' | 'logistics' | 'vales_comissoes' | 'fleet' | 'supabase_setup'>('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { 
     clients, 
     sectors, 
@@ -1539,59 +1541,67 @@ function AppContent() {
       {/* SIDEBAR NAVIGATION */}
       <aside className="w-full md:w-64 bg-slate-900 text-white shrink-0 shadow-lg flex flex-col justify-between">
         <div>
-          <div className="p-6 border-b border-slate-800">
-            <h1 className="text-lg font-black text-emerald-400 tracking-tight flex items-center gap-2">
-              <span className="bg-emerald-500 text-slate-900 px-2 py-0.5 rounded italic">P</span>
-              PARCEIROS DA ÁGUA
-            </h1>
-            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Gestão & Distribuição</p>
+          <div className="p-6 border-b border-slate-800 flex justify-between items-center">
+            <div>
+              <h1 className="text-lg font-black text-emerald-400 tracking-tight flex items-center gap-2">
+                <span className="bg-emerald-500 text-slate-900 px-2 py-0.5 rounded italic">P</span>
+                PARCEIROS DA ÁGUA
+              </h1>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">Gestão & Distribuição</p>
+            </div>
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-slate-400 hover:text-white transition-colors focus:outline-none"
+            >
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
           
-          <nav className="p-4 space-y-1">
+          <nav className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:block p-4 space-y-1`}>
             <button 
-              onClick={() => setActiveTab('dashboard')}
+              onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-bold transition-all text-left ${activeTab === 'dashboard' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
             >
               <LayoutDashboard size={18} /> Visão Geral
             </button>
             
             <button 
-              onClick={() => setActiveTab('order_flow')}
+              onClick={() => { setActiveTab('order_flow'); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-bold transition-all text-left ${activeTab === 'order_flow' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
             >
               <ShoppingCart size={18} /> Lançar Pedido
             </button>
 
             <button 
-              onClick={() => setActiveTab('clients')}
+              onClick={() => { setActiveTab('clients'); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-bold transition-all text-left ${activeTab === 'clients' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
             >
               <Users size={18} /> Clientes & Setores
             </button>
 
             <button 
-              onClick={() => setActiveTab('products')}
+              onClick={() => { setActiveTab('products'); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-bold transition-all text-left ${activeTab === 'products' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
             >
               <Layers size={18} /> Catálogo de Preços
             </button>
 
             <button 
-              onClick={() => setActiveTab('logistics')}
+              onClick={() => { setActiveTab('logistics'); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-bold transition-all text-left ${activeTab === 'logistics' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
             >
               <MapPin size={18} /> Rotas Inteligentes
             </button>
 
             <button 
-              onClick={() => setActiveTab('vales_comissoes')}
+              onClick={() => { setActiveTab('vales_comissoes'); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-bold transition-all text-left ${activeTab === 'vales_comissoes' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
             >
               <Wallet size={18} /> Card de Vales & Equipe
             </button>
 
             <button 
-              onClick={() => setActiveTab('fleet')}
+              onClick={() => { setActiveTab('fleet'); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-bold transition-all text-left ${activeTab === 'fleet' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
             >
               <Truck size={18} /> Gestão de Frota
@@ -1599,7 +1609,7 @@ function AppContent() {
 
             <div className="pt-4 border-t border-slate-800 mt-4">
               <button 
-                onClick={() => setActiveTab('supabase_setup')}
+                onClick={() => { setActiveTab('supabase_setup'); setIsMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-mono font-bold transition-all text-left ${activeTab === 'supabase_setup' ? 'bg-indigo-950 text-emerald-400 border border-emerald-500/30' : 'text-slate-500 hover:bg-slate-800 hover:text-white'}`}
               >
                 <Code size={14} /> SCRIPT SQL SUPABASE
@@ -1609,7 +1619,7 @@ function AppContent() {
         </div>
 
         {/* BOTTOM METRICS CONTAINER */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/40 text-xs text-slate-400">
+        <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:block p-4 border-t border-slate-800 bg-slate-950/40 text-xs text-slate-400`}>
           <div className="flex justify-between items-center mb-1">
             <span>Servidor Supabase</span>
             <span className="text-emerald-400 font-bold flex items-center gap-1">
