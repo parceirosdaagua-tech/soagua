@@ -1,0 +1,8 @@
+{
+  "name": "Parceiros da Água",
+  "description": "Sistema completo para gestão de distribuidoras de água, incluindo cadastro de clientes, vendas, controle financeiro de sócios, entregadores e setores por cidade.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

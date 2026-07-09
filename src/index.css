@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0277bd;
+  --color-primary-dark: #01579b;
+  --color-secondary: #e1f5fe;
+  --color-accent-theme: #00e676;
+  --color-text-main: #263238;
+  --color-text-muted: #546e7a;
+  --color-bg-app: #f0f4f8;
+  --color-border-theme: #cfd8dc;
+  --color-danger-theme: #d32f2f;
+  
+  --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--color-bg-app);
+  color: var(--color-text-main);
+}
