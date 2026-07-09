@@ -3259,7 +3259,9 @@ function AppContent() {
                   <p>CREATE TABLE public.produtos (</p>
                   <p>&nbsp;&nbsp;id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,</p>
                   <p>&nbsp;&nbsp;nome text NOT NULL,</p>
-                  <p>&nbsp;&nbsp;custo_unitario numeric(10,2) NOT NULL DEFAULT 0.00,</p>
+                  <p>&nbsp;&nbsp;custo_unitario numeric(10,4) NOT NULL DEFAULT 0.0000,</p>
+                  <p>&nbsp;&nbsp;custo_fardo numeric(10,2) NOT NULL DEFAULT 0.00,</p>
+                  <p>&nbsp;&nbsp;quantidade_fardo integer NOT NULL DEFAULT 12,</p>
                   <p>&nbsp;&nbsp;preco_varejo_vista numeric(10,2) NOT NULL DEFAULT 0.00,</p>
                   <p>&nbsp;&nbsp;preco_varejo_prazo numeric(10,2) NOT NULL DEFAULT 0.00,</p>
                   <p>&nbsp;&nbsp;preco_atacado_vista numeric(10,2) NOT NULL DEFAULT 0.00,</p>
@@ -3267,6 +3269,8 @@ function AppContent() {
                   <p>&nbsp;&nbsp;created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,</p>
                   <p>&nbsp;&nbsp;deleted_at timestamp with time zone</p>
                   <p>);</p>
+                  <p>COMMENT ON COLUMN public.produtos.custo_fardo IS 'Custo total de aquisição do fardo fechado';</p>
+                  <p>COMMENT ON COLUMN public.produtos.quantidade_fardo IS 'Quantidade de garrafas/unidades no fardo';</p>
                   <br/>
                   <p>CREATE TABLE public.veiculos (</p>
                   <p>&nbsp;&nbsp;id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,</p>
